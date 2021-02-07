@@ -1,0 +1,14 @@
+﻿version: '2'
+
+services:
+  tm:
+    image: artursstaf/translation-memory
+  marian:
+    build: .
+    # build from Dockerfile
+    context: ./Path
+    dockerfile: Dockerfile
+    ports:
+     - "5000:5000"
+    volumes:
+     - .:/code
