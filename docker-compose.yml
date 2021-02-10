@@ -1,14 +1,45 @@
-﻿version: '2'
+﻿version: '2.3'
 
 services:
   tm:
-    image: artursstaf/translation-memory
-  marian:
-    build: .
-    # build from Dockerfile
-    context: ./Path
-    dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile.tm
     ports:
-     - "5000:5000"
-    volumes:
-     - .:/code
+      - "8088:80"
+    volumes: # specify where index is stored
+      - "./index:/index"
+    command: [
+        "--bleu-rescoring-threshold", "0.05",
+        "--index-dir", "/index"
+    ]
+
+  adaptive:
+    runtime: nvidia
+    build:
+      context: .
+      dockerfile: Dockerfile.marian
+    ports:
+      - "8089:80"
+    volumes: # Specify where marian model is stored
+      - "./marian-model:/marian-model"
+    command: [
+        "--config", "/marian-model/model.npz.yml",
+        "--after-batches", "10",
+        "--after-epochs", "10",
+        "--learn-rate", "0.1",
+        "--mini-batch", "15",
+        "--workspace", "4000"
+    ]
+
+  wrapper:
+    build:
+      context: .
+      dockerfile: Dockerfile.wrapper
+    ports:
+      - "8087:80"
+    command: [
+        "--tm-server", "http://localhost:8088",
+        "--marian-server", "ws://localhost:8089"
+    ]
+
