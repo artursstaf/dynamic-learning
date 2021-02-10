@@ -5,8 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.tm
-    ports:
-      - "8088:80"
     volumes: # specify where index is stored
       - "./index:/index"
     command: [
@@ -19,8 +17,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.marian
-    ports:
-      - "8089:80"
     volumes: # Specify where marian model is stored
       - "./marian-model:/marian-model"
     command: [
@@ -28,8 +24,7 @@ services:
         "--after-batches", "10",
         "--after-epochs", "10",
         "--learn-rate", "0.1",
-        "--mini-batch", "15",
-        "--workspace", "4000"
+        "--mini-batch", "15"
     ]
 
   wrapper:
@@ -37,9 +32,9 @@ services:
       context: .
       dockerfile: Dockerfile.wrapper
     ports:
-      - "8087:80"
+      - "8088:80"
     command: [
-        "--tm-server", "http://localhost:8088",
-        "--marian-server", "ws://localhost:8089"
+        "--tm-server", "http://tm:80",
+        "--marian-server", "ws://adaptive:80"
     ]
 

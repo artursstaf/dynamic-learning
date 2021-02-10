@@ -3,6 +3,7 @@ import json
 from websocket import create_connection
 import requests
 from flask import Flask, jsonify, request
+import sys
 
 app = Flask(__name__)
 
@@ -18,6 +19,7 @@ def translate():
     # {'meta': {'uid': 'name', 'language': 'en'}, 'input': 'hello world'}
     req = request.json
     context = __fetch_context(args.tm_server, req)
+    sys.stderr.write(f"src: {req['input']}, context: {context} \n")
     translation = __call_marian(args.marian_server, req['input'], context)
     return jsonify({'output': translation}), 201
 
@@ -53,4 +55,4 @@ def __fetch_context(url, req):
     return ["\n".join(result["sourceContext"]), "\n".join(result["targetContext"])]
 
 
-app.run(debug=True, port=args.port)
+app.run(debug=True, port=args.port, host='0.0.0.0')
