@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.tm
-    volumes: # specify where index is stored
+    volumes: # Specify where index is stored
       - "./index:/index"
     command: [
         "--bleu-rescoring-threshold", "0.05",
@@ -13,19 +13,28 @@ services:
     ]
 
   adaptive:
-    runtime: nvidia
     build:
       context: .
       dockerfile: Dockerfile.marian
     volumes: # Specify where marian model is stored
       - "./marian-model:/marian-model"
+      - "./marian-model/da.config.yml:/marian-model/config.yml"
     command: [
-        "--config", "/marian-model/model.npz.yml",
+        "--config", "/marian-model/config.yml",
         "--after-batches", "10",
         "--after-epochs", "10",
         "--learn-rate", "0.1",
-        "--mini-batch", "15"
+        "--mini-batch", "15",
+        "--workspace", "9000"
     ]
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: [ '0' ]
+              capabilities: [ gpu ]
 
   wrapper:
     build:
