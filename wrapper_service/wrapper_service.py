@@ -43,7 +43,12 @@ def drop_index():
 
 def __call_marian(url, input, context):
     ws = create_connection(url + '/translate')
-    ws.send(json.dumps({'input': input, 'context': [context]}))
+
+    if any(c == "" for c in context):
+        ws.send(json.dumps({'input': input}))
+    else:
+        ws.send(json.dumps({'input': input, 'context': [context]}))
+
     result = ws.recv()
     ws.close()
     result_json = json.loads(result.strip())
