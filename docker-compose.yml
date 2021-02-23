@@ -18,9 +18,8 @@ services:
       dockerfile: Dockerfile.marian
     volumes: # Specify where marian model is stored
       - "./marian-model:/marian-model"
-      - "./marian-model/da.config.yml:/marian-model/config.yml"
     command: [
-        "--config", "/marian-model/config.yml",
+        "--config", "/marian-model/decoder.yml",
         "--after-batches", "10",
         "--after-epochs", "10",
         "--learn-rate", "0.1",

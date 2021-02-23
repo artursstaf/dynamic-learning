@@ -20,8 +20,8 @@ def translate():
     req = request.json
     context = __fetch_context(args.tm_server, req)
     sys.stderr.write(f"src: {req['input']}, context: {context} \n")
-    translation = __call_marian(args.marian_server, req['input'], context)
-    return jsonify({'output': translation}), 201
+    marian_output = __call_marian(args.marian_server, req['input'], context)
+    return jsonify(marian_output), 201
 
 
 @app.route('/save', methods=['POST'])
@@ -52,7 +52,7 @@ def __call_marian(url, input, context):
     result = ws.recv()
     ws.close()
     result_json = json.loads(result.strip())
-    return result_json['output']
+    return result_json
 
 
 def __fetch_context(url, req):
