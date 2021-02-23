@@ -14,8 +14,8 @@ So for each translation Marian requires the input text and context for fine-tuni
 The current implementation: https://github.com/tilde-nlp/lucene-sentence-search/
 Provides with functionality to:
 * Store indexed (source, target) sentence pairs.
-* Retrieve similar sentences by BLEU
-* Drop sentence pairs in TM
+* Retrieve similar sentences by BLEU.
+* Drop sentence pairs.
  
 **Wrapper** is just an additional service that simplifies API by forwarding calls to Translation Memory and Marian. Wrapper
 service also serves as a simple example how Translation Memory and Marian interacts.
