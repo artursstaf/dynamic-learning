@@ -28,7 +28,7 @@ Nvidia GPU `https://docs.docker.com/compose/install/`
 ## How to build and run example
 
 First download model files by running `bash download_model.sh` in the repo root directory. <br>
-Then build and start the services by `docker-compose up` <br>.
+Then build and start the services by `docker-compose up`.<br>
 Which will then load the downloaded marian model and expose the API on port 8088.
 
 ## Configuration
